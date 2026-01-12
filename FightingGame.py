@@ -1,30 +1,55 @@
-import math
 import random
-def calculate_damage():
-    
-def fight(character_one, character_two):
 
+#Functions
+def calculate_damage(attacker, defender):
+    damage = attacker["Attack"] - defender["Defense"]
+    return damage
 
+def print_result(attacker, defender, damage):
+    print(attacker["Name"], "attacks", defender["Name"], "for", damage, "damage!")
+    remaining = max(defender["HP"], 0)
+    print(defender["Name"], "has", remaining, "HP left.")
 
+def fight(attacker, defender):
+    damage = calculate_damage(attacker, defender)
+    defender["HP"] -= damage
+    print_result(attacker, defender, damage)
+    return damage
 
 #Intro
 print("Welcome to the Fighting Game!")
 character_one_name = input("Name character 1: ")
 character_two_name = input("Name character 2: ")
 
-#Random Stats
-char_one_health = random.randint(25,35)
-char_one_def = random.randint(1,4)
-char_one_atk = random.randint(4,6)
-char_two_health = random.randint(20,30)
-char_two_def = random.randint(0,3)
-char_two_atk = random.randint(5,7)
-
 #Dictionary
-character_one = {"name" : character_one_name, char_one_health, char_one_def, char_one_atk}
-character_two = [character_two_name, char_two_health, char_two_def, char_two_atk]
+character_one = {
+        "Name": character_one_name,
+        "HP": random.randint(55,65),
+        "Attack": random.randint(6,11),
+        "Defense": random.randint(3,5)
+    }
+character_two = {
+        "Name": character_two_name,
+        "HP": random.randint(40,52),
+        "Attack": random.randint(8,12),
+        "Defense": random.randint(5,8)
+    }
 
 #Print Stats
-print(character_one[0], "will have", character_one[1], "health,", character_one[3], "atk, and", character_one[2], "defense.")
-print(character_two[0], "will have", character_two[1], "health,", character_two[3], "atk, and", character_two[2], "defense.")
+print("\n" + character_one["Name"], "will have", character_one["HP"], "HP,", character_one["Attack"], "attack,", character_one["Defense"], "defense.")
+print(character_two["Name"], "will have", character_two["HP"], "HP,", character_two["Attack"], "attack,", character_two["Defense"], "defense.")
+input("Press Enter to start the fight...")
 
+#Game Start
+round_num = 1
+defender = character_one
+attacker = character_two
+while character_one["HP"] > 0 and character_two["HP"] > 0:
+    print("\nRound:", round_num)
+    fight(attacker, defender)
+    if defender["HP"] <= 0:
+        print("\n" + defender["Name"], "was deafeated!\n" + attacker["Name"], "wins!")
+        break
+    attacker, defender = defender, attacker
+    round_num += 1
+    input("Press Enter to continue...")
